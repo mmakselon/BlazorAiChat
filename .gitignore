@@ -1,0 +1,43 @@
+# .NET build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer package
+*.pdb
+*.exe
+*.dll
+
+# JetBrains Rider specific files
+.idea/
+
+# VS Code directories and settings
+.vscode/
+.vs/
+
+# ASP.NET temporary files
+appsettings.Development.json
+appsettings.Staging.json
+
+# NPM packages
+node_modules/
+
+# Blazor WebAssembly cache
+wwwroot/_content/
+
+# Publish folder (optional)
+publish/
+
+# Logs
+*.log
