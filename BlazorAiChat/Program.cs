@@ -1,4 +1,5 @@
 using BlazorAiChat.Components;
+using BlazorAiChat.Models;
 
 namespace BlazorAiChat
 {
@@ -11,6 +12,16 @@ namespace BlazorAiChat
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            var openAiApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new Exception("Brak klucza API OpenAI w appsettings.json");
+
+            builder.Services.AddHttpClient("OpenAI");
+            builder.Services.AddScoped<OpenAiService>(sp =>
+            {
+                var httpClientFactory= sp.GetRequiredService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.CreateClient("OpenAI");
+                return new OpenAiService(httpClient,openAiApiKey);
+            });
 
             var app = builder.Build();
 
