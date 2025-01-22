@@ -41,3 +41,6 @@ publish/
 
 # Logs
 *.log
+
+#file with secret API key
+appsettings.json
