@@ -1,7 +1,23 @@
 ﻿@page "/"
+@using BlazorAiChat.Models
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h3>Witaj w naszej aplikacji z AI!</h3>
 
-Welcome to your new app.
+<p>To jest strona startowa. Zaraz zbudujemy prosty interfejs do rozmowy z AI.</p>
+
+<p>Odpowiedź AI (test): @_answer</p>
+
+@code {
+    private string _answer;
+
+    [Inject]
+    public OpenAiService OpenAiService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _answer = await OpenAiService.GetAnswerAsync("Cześć, jak się masz?");
+    }
+
+}
