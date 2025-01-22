@@ -2,6 +2,9 @@
 bin/
 obj/
 
+#file with secret API key
+appsettings.json
+
 # User-specific files
 *.user
 *.userosscache
@@ -41,6 +44,3 @@ publish/
 
 # Logs
 *.log
-
-#file with secret API key
-appsettings.json
