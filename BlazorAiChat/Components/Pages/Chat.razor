@@ -1,0 +1,48 @@
+﻿@page "/chat"
+@using BlazorAiChat.Models
+
+<h3>Chat z AI</h3>
+
+
+<textarea class="form-control mb-3" @bind="_currentPrompt" rows="3" placeholder="Wpisz swoje pytanie..."></textarea>
+
+<button class="btn btn-primary" @onclick="SendPrompt">Wyślij</button>
+
+<div class="mt-5">
+    <h4>Historia rozmowy:</h4>
+    <ul>
+        @foreach (var msg in _messages)
+        {
+            <li><b>@msg.Role:</b> @msg.Content</li>
+        }
+    </ul>
+</div>
+
+@code {
+    private string _currentPrompt;
+    private List<ChatCompletionMessage> _messages = new List<ChatCompletionMessage>();
+
+    [Inject]
+    public OpenAiService OpenAiService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _messages.Add(new ChatCompletionMessage { Role = "System", Content = "Witaj, zadaj mi pytanie!" });
+
+    }
+
+    private async Task SendPrompt()
+    {
+        if (string.IsNullOrWhiteSpace(_currentPrompt))
+            return;
+
+        _messages.Add(new ChatCompletionMessage { Role = "User", Content = _currentPrompt });
+
+        var answer = await OpenAiService.GetAnswerAsync(_currentPrompt);
+
+        _messages.Add(new ChatCompletionMessage { Role = "AI", Content = answer });
+
+        _currentPrompt = string.Empty;
+    }
+
+}
