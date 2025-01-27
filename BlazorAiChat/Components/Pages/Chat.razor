@@ -3,6 +3,16 @@
 
 <h3>Chat z AI</h3>
 
+<div class="mb-3">
+    <label class="mb-2">Wybierz prompt:</label>
+    <select class="form-select" @onchange="OnPromptSelected">
+        <option>-- Wybierz --</option>
+        @foreach (var item in _availablePrompts)
+        {
+            <option value="@item">@item</option>
+        }
+    </select>
+</div>
 
 <textarea class="form-control mb-3" @bind="_currentPrompt" rows="3" placeholder="Wpisz swoje pytanie..."></textarea>
 
@@ -21,14 +31,40 @@
 @code {
     private string _currentPrompt;
     private List<ChatCompletionMessage> _messages = new List<ChatCompletionMessage>();
+    private List<string> _availablePrompts = new List<string>();
 
     [Inject]
     public OpenAiService OpenAiService { get; set; }
+
+    [Inject]
+    public IWebHostEnvironment Env { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _messages.Add(new ChatCompletionMessage { Role = "System", Content = "Witaj, zadaj mi pytanie!" });
 
+        var webRootPath = Env.WebRootPath;
+        var csvPath = Path.Combine(webRootPath, "data", "prompts.csv");
+        var lines = File.ReadAllLines(csvPath);
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            var line = lines[i].Trim().Trim('"');
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                _availablePrompts.Add(line);
+            }
+        }
+    }
+
+    private void OnPromptSelected(ChangeEventArgs e)
+    {
+        var selected = e.Value?.ToString();
+
+        if (!string.IsNullOrWhiteSpace(selected))
+        {
+            _currentPrompt = selected;
+        }
     }
 
     private async Task SendPrompt()
